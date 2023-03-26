@@ -1,0 +1,114 @@
+
+/**
+ * @author: Muhammad Fariz Imran
+ * @version 1.0
+ * 
+ *          I will not pay 8 dollars a month to use Quizlet's learn feature. >:)
+ * 
+ *          TO BE IMPLEMENTED:
+ *          *User interface (open an actual window and stuff).
+ *          *Saving vocabulary profiles (no need to enter in your terms every
+ *          time)?
+ *          *Dummy proofing user input by denying bad formatting
+ *          *Override correct answer
+ *          *Directions
+ *          *Make this into a real desktop app lol idk
+ */
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Farizlet
+{
+
+  public static void main(String[] args)
+  {
+    // Introduction and directions and prompt
+    System.out
+      .println("Welcome to Farizlet! Directions to be implemented, currently for personal use\nEnter your vocab:");
+    // FORMAT IS "Term:Definition; Term: Definition"
+
+    Scanner input = new Scanner(System.in);
+    String vocab = input.nextLine();
+
+    ArrayList<String> terms = new ArrayList<>();
+    ArrayList<String> definitions = new ArrayList<>();
+
+    // switch terms and definitions?
+    boolean switchTermsAndDefinitions = false;
+    if (vocab.substring(0, 1).equals("*"))
+    {
+      switchTermsAndDefinitions = true;
+    }
+
+    // Create arrayList of terms and definitions from user input
+    boolean readingTerm = true;
+    String current = "";
+    for (int i = 0; i < vocab.length(); i++)
+    {
+      char c = vocab.charAt(i);
+
+      if (c == ':')
+      {
+        readingTerm = false;
+        terms.add(current);
+        current = "";
+      }
+      else if (c == ';')
+      {
+        readingTerm = true;
+        definitions.add(current);
+        i++;
+        current = "";
+      }
+      else if (c != '*')
+      {
+        current += c;
+      }
+
+      // accounts for last definition having no ";" after it
+      if (i == vocab.length() - 1)
+      {
+        definitions.add(current);
+      }
+    }
+
+    if (switchTermsAndDefinitions)
+    {
+      for (int i = 0; i < terms.size(); i++)
+      {
+        String temp = terms.get(i);
+        terms.set(i, definitions.get(i));
+        definitions.set(i, temp);
+      }
+    }
+
+    int points = 0;
+    for (int i = 0; i < terms.size(); i++)
+    {
+      System.out.println("The term is:\n" + terms.get(i));
+      input = new Scanner(System.in);
+      System.out.println("Your answer:");
+      String answer = input.nextLine();
+
+      if (answer.equals(definitions.get(i))) // correct
+      {
+        System.out.println("Correct!\n");
+        points++;
+      }
+      else if (answer.equals("idk"))
+      {
+        System.out.println("That's okay. The correct answer is:\n" + "\""
+          + definitions.get(i) + "\"");
+      }
+      else // wrong
+      {
+        System.out.println("\nWrong :(\nThe correct answer is:\n" + "\""
+          + definitions.get(i) + "\"\n" + "But you said:\n" + "\"" + answer
+          + "\"");
+      }
+    }
+    System.out.println("\nYour final score is: " + points + " out of "
+      + terms.size() + " or " + (double) points / terms.size() + "%.");
+  }
+}
